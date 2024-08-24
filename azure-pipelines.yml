@@ -11,14 +11,7 @@ jobs:
   - job: BuildApp
     displayName: Building React App
     steps:
-    - task: CmdLine@2
+    - task: NodeTool@0
       inputs:
-        script: |
-          curl -s https://deb.nodesource.com/setup_16.x | sudo bash
-          
-          sudo apt install nodejs -y
-    - task: CmdLine@2
-      inputs:
-        script: |
-          npm install
-          npm run build
+        versionSource: 'spec'
+        versionSpec: '16.x'
