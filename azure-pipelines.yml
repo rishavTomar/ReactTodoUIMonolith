@@ -1,0 +1,24 @@
+name: ReactPipeLine
+
+trigger: 
+ branches:
+   include:
+   - main
+
+pool: Default
+
+jobs:
+  - job: BuildApp
+    displayName: Building React App
+    steps:
+    - task: CmdLine@2
+      inputs:
+        script: |
+          curl -s https://deb.nodesource.com/setup_16.x | sudo bash
+          
+          sudo apt install nodejs -y
+    - task: CmdLine@2
+      inputs:
+        script: |
+          npm install
+          npm run build
