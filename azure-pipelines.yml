@@ -5,7 +5,8 @@ trigger:
    include:
    - main
 
-pool: Default
+pool: 
+  vmImage: unbuntu-latest
 
 stages:
 - stage: Build
