@@ -27,21 +27,17 @@ stages:
         PathtoPublish: '$(Build.SourcesDirectory)/build'
         ArtifactName: 'drop'
         publishLocation: 'Container'
-    - task: DownloadBuildArtifacts@1
-      inputs:
-        buildType: 'current'
-        downloadType: 'single'
-        artifactName: 'drop'
-        downloadPath: '$(System.ArtifactsDirectory)'
-
+        
 - stage: Deploy
   jobs:
     - job: DeployApp
-      displayName: react app deployment
+      displayName: React App Deployment
       steps:
+      - download: current
+        artifact: drop
       - task: AzureWebApp@1
         inputs:
           azureSubscription: 'LearningsOwner'
           appType: 'webAppLinux'
           appName: 'ReactWebAppRishav'
-          package: '$(System.ArtifactsDirectory)/drop/**/*.zip'
+          package: '$(Pipeline.Workspace)/drop/**/*.zip'
