@@ -2,46 +2,31 @@ name: ReactPipeLine
 
 trigger: none
 
-pool: 
+pool:
   vmImage: ubuntu-latest
 
-stages:
-- stage: Build
-  jobs:
-  - job: BuildApp
-    displayName: Building React App
-    steps:
-    - task: NodeTool@0
-      inputs:
-        versionSource: 'spec'
-        versionSpec: '16.x'
-    - task: Npm@1
-      inputs:
-        command: 'install'
-    - task: Npm@1
-      inputs:
-        command: 'custom'
-        customCommand: 'run build'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.SourcesDirectory)/build'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
-    - task: DownloadBuildArtifacts@1
-      inputs:
-        buildType: 'current'
-        downloadType: 'single'
-        artifactName: 'drop'
-        downloadPath: '$(Build.ArtifactStagingDirectory)'
-        
-- stage: Deploy
-  jobs:
-    - job: DeployApp
-      displayName: React App Deployment
-      steps:
-      - task: AzureWebApp@1
-        inputs:
-          azureSubscription: 'LearningsOwner'
-          appType: 'webAppLinux'
-          appName: 'ReactWebAppRishav'
-          package: '$(Build.ArtifactStagingDirectory)/drop'
+steps:
+- task: Npm@1
+  inputs:
+    command: 'install'
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    customCommand: 'run build'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)/build'
+    ArtifactName: 'ToDoUI-APP'
+    publishLocation: 'Container'
+- task: DownloadBuildArtifacts@1
+  inputs:
+    buildType: 'current'
+    downloadType: 'single'
+    artifactName: 'ToDoUI-APP'
+    downloadPath: '$(Build.ArtifactStagingDirectory)'
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'LearningsOwner'
+    appType: 'webAppLinux'
+    appName: 'ReactWebAppRishav'
+    package: '$(Build.ArtifactStagingDirectory)/ToDoUI-APP'
