@@ -1,4 +1,4 @@
-name: ReactPipeline
+name: ReactAppPipeline
 
 trigger: none
 
@@ -6,37 +6,43 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  - stage: DelpyToDoApp
-    displayName: Deploying ToDo app
-    jobs:
-    - job: TodoApp
-      displayName: ToDo App building
-      steps:
-      - task: NodeTaskRunnerInstaller@0
-        inputs:
-          nodeVersion: '16'
-      - task: CmdLine@2
-        inputs:
-          script: 'npm install'
-      - task: CmdLine@2
-        inputs:
-          script: 'npm run build'
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: '$(Build.SourcesDirectory)/build'
-          ArtifactName: 'drop'
-          publishLocation: 'Container'
-      - task: DownloadBuildArtifacts@1
-        inputs:
-          buildType: 'current'
-          downloadType: 'single'
-          artifactName: 'drop'
-          downloadPath: '$(Build.ArtifactStagingDirectory)'
-      - task: AzureRmWebAppDeployment@4
-        inputs:
-          ConnectionType: 'AzureRM'
-          azureSubscription: 'LearningsOwner'
-          appType: 'webApp'
-          WebAppName: 'ReactWebAppRishav'
-          packageForLinux: '$(Build.ArtifactStagingDirectory)/drop'
-      
+- stage: buildingApp
+  jobs:
+  - job: BuildReactApp
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSource: 'spec'
+        versionSpec: '16.x'
+    - task: Npm@1
+      inputs:
+        command: 'install'
+    - task: Npm@1
+      inputs:
+        command: 'custom'
+        customCommand: 'run build'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.SourcesDirectory)/build'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+    
+- stage: deployingApp
+  jobs:
+  - job: deployingReactApp
+    steps:
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'drop'
+        downloadPath: '$(Build.ArtifactStagingDirectory)'
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'LearningsOwner'
+        appType: 'webApp'
+        WebAppName: 'ReactWebAppRishav'
+        packageForLinux: '$(Build.ArtifactStagingDirectory)/drop'
+    
+    
