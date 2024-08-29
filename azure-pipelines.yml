@@ -29,6 +29,12 @@ stages:
     
 - stage: deployingApp
   jobs:
+  - job: ManualValidation
+    pool: server
+    steps:
+    - task: ManualValidation@1
+      inputs:
+        notifyUsers: 'tomarrishav@gmail.com'
   - job: deployingReactApp
     steps:
     - task: DownloadBuildArtifacts@1
