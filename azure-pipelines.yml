@@ -26,8 +26,8 @@ stages:
         PathtoPublish: '$(Build.SourcesDirectory)/build'
         ArtifactName: 'drop'
         publishLocation: 'Container'
-    
-- stage: deployingApp
+  
+- stage: ManualValidation
   jobs:
   - job: ManualValidation
     pool: server
@@ -35,6 +35,9 @@ stages:
     - task: ManualValidation@1
       inputs:
         notifyUsers: 'tomarrishav@gmail.com'
+    
+- stage: deployingApp
+  jobs:  
   - job: deployingReactApp
     steps:
     - task: DownloadBuildArtifacts@1
