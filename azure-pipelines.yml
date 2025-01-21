@@ -1,57 +1,91 @@
-name: ReactAppPipeline
+name: Practise
 
-trigger: none
+trigger: 
+  branches:
+    include:
+    - main
 
-pool: 
-  vmImage: ubuntu-latest
+pool:
+  vmImage: 'ubuntu-latest'
+  
+
+
+variables:
+  FIRST_NAME: 'Rishav'
+  LAST_NAME: 'Tomar'
 
 stages:
-- stage: buildingApp
+- stage: BUILD_STAGE
+  displayName: APP_BUILDING_STAGE
   jobs:
-  - job: BuildReactApp
+  - job: BUILD_JOB
+    displayName: APP_BUILDING_JOB
     steps:
-    - task: NodeTool@0
+    - task: CmdLine@2
       inputs:
-        versionSource: 'spec'
-        versionSpec: '16.x'
-    - task: Npm@1
-      inputs:
-        command: 'install'
-    - task: Npm@1
-      inputs:
-        command: 'custom'
-        customCommand: 'run build'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.SourcesDirectory)/build'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
+        script: |
+          echo Write your commands here
+          
+          echo Hello world $(FIRST_NAME)
+
+
+
+
+
+# name: ReactAppPipeline
+
+# trigger: none
+
+# pool: 
+#   vmImage: ubuntu-latest
+
+# stages:
+# - stage: buildingApp
+#   jobs:
+#   - job: BuildReactApp
+#     steps:
+#     - task: NodeTool@0
+#       inputs:
+#         versionSource: 'spec'
+#         versionSpec: '16.x'
+#     - task: Npm@1
+#       inputs:
+#         command: 'install'
+#     - task: Npm@1
+#       inputs:
+#         command: 'custom'
+#         customCommand: 'run build'
+#     - task: PublishBuildArtifacts@1
+#       inputs:
+#         PathtoPublish: '$(Build.SourcesDirectory)/build'
+#         ArtifactName: 'drop'
+#         publishLocation: 'Container'
   
-- stage: ManualValidation
-  jobs:
-  - job: ManualValidation
-    pool: server
-    steps:
-    - task: ManualValidation@1
-      inputs:
-        notifyUsers: 'tomarrishav@gmail.com'
+# - stage: ManualValidation
+#   jobs:
+#   - job: ManualValidation
+#     pool: server
+#     steps:
+#     - task: ManualValidation@1
+#       inputs:
+#         notifyUsers: 'tomarrishav@gmail.com'
     
-- stage: deployingApp
-  jobs:  
-  - job: deployingReactApp
-    steps:
-    - task: DownloadBuildArtifacts@1
-      inputs:
-        buildType: 'current'
-        downloadType: 'single'
-        artifactName: 'drop'
-        downloadPath: '$(Build.ArtifactStagingDirectory)'
-    - task: AzureRmWebAppDeployment@4
-      inputs:
-        ConnectionType: 'AzureRM'
-        azureSubscription: 'LearningsOwner'
-        appType: 'webApp'
-        WebAppName: 'ReactWebAppRishav'
-        packageForLinux: '$(Build.ArtifactStagingDirectory)/drop'
+# - stage: deployingApp
+#   jobs:  
+#   - job: deployingReactApp
+#     steps:
+#     - task: DownloadBuildArtifacts@1
+#       inputs:
+#         buildType: 'current'
+#         downloadType: 'single'
+#         artifactName: 'drop'
+#         downloadPath: '$(Build.ArtifactStagingDirectory)'
+#     - task: AzureRmWebAppDeployment@4
+#       inputs:
+#         ConnectionType: 'AzureRM'
+#         azureSubscription: 'LearningsOwner'
+#         appType: 'webApp'
+#         WebAppName: 'ReactWebAppRishav'
+#         packageForLinux: '$(Build.ArtifactStagingDirectory)/drop'
     
     
